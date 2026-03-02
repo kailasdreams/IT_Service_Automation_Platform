@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IT Service Automation Platform - Architecture Diagram</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+            padding: 0 30px;
+        }
+        
+        .tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 15px;
+            font-weight: 600;
+            color: #6c757d;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .tab:hover {
+            color: #495057;
+            background: rgba(0,0,0,0.02);
+        }
+        
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .architecture-view {
+            display: none;
+        }
+        
+        .architecture-view.active {
+            display: block;
+        }
+        
+        .layer {
+            margin-bottom: 30px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .layer-header {
+            padding: 20px;
+            font-weight: bold;
+            font-size: 18px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .layer-header i {
+            font-size: 24px;
+        }
+        
+        .layer-content {
+            padding: 25px;
+            background: white;
+        }
+        
+        .components {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        
+        .component {
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            background: #f8f9fa;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .component:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            border-color: #667eea;
+        }
+        
+        .component-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #2c3e50;
+            font-size: 16px;
+        }
+        
+        .component-desc {
+            font-size: 13px;
+            color: #6c757d;
+            line-height: 1.6;
+        }
+        
+        .flow-diagram {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .flow-step {
+            background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-left: 4px solid #667eea;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .flow-step-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+        
+        .flow-step-desc {
+            color: #6c757d;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .arrow {
+            text-align: center;
+            font-size: 24px;
+            color: #667eea;
+            margin: 10px 0;
+        }
+        
+        .integration-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .integration-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .integration-card:hover {
+            border-color: #667eea;
+            transform: scale(1.05);
+        }
+        
+        .integration-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+        
+        .integration-name {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .integration-type {
+            font-size: 12px;
+            color: #6c757d;
+        }
+        
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        
+        .tech-category {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        
+        .tech-category-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 16px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 8px;
+        }
+        
+        .tech-item {
+            padding: 10px;
+            background: white;
+            margin: 8px 0;
+            border-radius: 5px;
+            font-size: 14px;
+            border-left: 3px solid #667eea;
+            padding-left: 12px;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .metric-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .metric-value {
+            font-size: 36px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .metric-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .legend-color {
+            width: 30px;
+            height: 20px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>IT Service Automation Platform</h1>
+            <p>Comprehensive Architecture for ITIL Process Automation, NMS Integration & Automated Troubleshooting</p>
+        </div>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="showView('layered')">Layered Architecture</button>
+            <button class="tab" onclick="showView('flow')">Event Flow</button>
+            <button class="tab" onclick="showView('itil')">ITIL Processes</button>
+            <button class="tab" onclick="showView('diagnostics')">Diagnostics (L1/L2)</button>
+            <button class="tab" onclick="showView('capacity')">Capacity Planning</button>
+            <button class="tab" onclick="showView('integrations')">Integrations</button>
+            <button class="tab" onclick="showView('tech-stack')">Tech Stack</button>
+            <button class="tab" onclick="showView('metrics')">Success Metrics</button>
+        </div>
+        
+        <div class="content">
+            <!-- Layered Architecture View -->
+            <div id="layered" class="architecture-view active">
+                <h2 style="margin-bottom: 30px; color: #2c3e50;">Platform Architecture Layers</h2>
+                
+                <div class="layer">
+                    <div class="layer-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <span>Presentation Layer</span>
+                        <span>🖥️</span>
+                    </div>
+                    <div class="layer-content">
+                        <div class="components">
+                            <div class="component">
+                                <div class="component-title">Web Portal</div>
+                                <div class="component-desc">Responsive web application for administrators and end users with real-time dashboards</div>
+                            </div>
+                            <div class="component">
+                                <div class="component-title">Mobile App</div>
+                                <div class="component-desc">Native mobile application for on-the-go incident management and notifications</div>
+                            </div>
+                            <div class="component">
+                                <div class="component-title">API Gateway</div>
+                                <div class="component-desc">Centralized entry point for all API requests with authentication and rate limiting</div>
+                            </div>
+                            <div class="component">
+                                <div class="component-title">ChatBot Interface</div>
+                                <div class="component-desc">Conversational interface for ticket creation and status queries</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="layer">
+                    <div class="layer-header" style="background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);">
+                        <span>API & Integration Layer</span>
+                        <span>🔗</span>
+                    </div>
+                    <div class="layer-content">
+                        <div class="components">
+                            <div class="component">
+                                <div class="component-title">REST API</div>
+                                <div class="component-desc">RESTful APIs following OpenAPI 3.0 specification for all platform operations</div>
+                            </div>
+                            <div class="component">
+                                <div class="component-title">GraphQL API</div>
+                                <div class="component-desc">Flexible query language for complex data requirements and mobile apps</div>
+                            </div>
+                            <div class="component">
+                                <div class="component-title">Webhook Manager</div>
+                                <div class="component-desc">Manages incoming and outgoing webhooks for event-driven integrations</div>
+                            </div>
+                            <div class="component">
+                                <div class="component-title">SSO/Authentication</div>
+                                <div class="component-desc">OAuth 2.0, SAML 2.0 support with multi-factor authentication</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="layer">
+                    <div class="layer-header" style="background: linear-gradient(135deg, #e67e22 0%, #d35400 100%);">
+                        <span>Business Logic Layer</span>
+                        <span>⚙️</span>
+                    </div>
+                    <div class="layer-content">
+                        <div class="components">
+                            <div class="component">
+                                <div class="component-title">ITIL Process Engine</div>
+                                <div class="component-desc">Implements incident, problem, and change management workflows per ITIL standards</div>
+                            </div>
+                            <div class="component">
+                                <div class="component-title">Workflow Orchestrator</div>
+                                <div class="component-desc">Manages complex multi-step automation workflows with approval gates</div>
+                            </div>
+                            <div class="component">
+                                <div class="component-title">Rule Engine</div>
+                                <div class="component-desc">Business rules for ticket routing, prioritization, and auto-assignment</div>
+                            </div>
+                            <div class="component">
+                                <div class="component-title">AI/ML Models</div>
+                                <div class="component-desc">Machine learning for classification, prediction, and anomaly detection</div>
+                            </div>
+                            <div class="component">
+                                <div class="component-title">Decision Engine</div>
+                                <div class="component-desc">Evaluates conditions and determines appropriate actions based on events</div>
+                            </div>
+                            <div class="component">
+                                <div class="component-title">Correlation Engine</div>
+                                <div class="component-desc">Identifies patterns and relationships between events and incidents</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="layer">
+                    <div class="layer-header" style="background: linear-gradient(135deg, #16a085 0%, #1abc9c 100%);">
+                        <span>Integration Layer</span>
+                        <span>🔌</span>
+                    </div>
+                    <div class="layer-content">
+                        <div class="components">
+                            <div class="component">
+                                <div class="component-title">NMS Connectors</div>
+                                <div class="component-desc">Pre-built connectors for SolarWinds, Nagios, Zabbix, PRTG, Prometheus</div>
+                            </div>
+                            <div class="component">
+                                <div class="component-title">ITSM Connectors</div>
+                                <div class="component-desc">Integration with ServiceNow, Jira Service Management, BMC Remedy</div>
+                            </div>
+                            <div class="component">
+                                <div class="component-title">CMDB Integration</div>
+                                <div class="component-desc">Bidirectional sync with configuration management databases</div>
+                            </div>
+                            <div class="component">
+                                <div class="component-title">Monitoring Tools</div>
+                                <div class="component-desc">Integration with Datadog, New Relic, Dynatrace, AppDynamics</div>
+                            </div>
+                            <div class="component">
+                                <div class="component-title">Ticketing Systems</div>
+                                <div class="component-desc">Universal ticket adapter for various ticketing platforms</div>
+                            </div>
+                            <div class="component">
+                                <div class="component-title">ChatOps</div>
+                                <div class="component-desc">Integration with Slack, Microsoft Teams, PagerDuty</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="layer">
+                    <div class="layer-header" style="background: linear-gradient(135deg, #8e44ad 0%, #9b59b6 100%);">
+                        <span>Data Layer</span>
+                        <span>💾</span>
+                    </div>
+                    <div class="layer-content">
+                        <div class="components">
+                            <div class="component">
+                                <div class="component-title">Time-Series DB</div>
+                                <div class="component-desc">InfluxDB/TimescaleDB for metrics, events, and monitoring data</div>
+                            </div>
+                            <div class="component">
+                                <div class="component-title">Document DB</div>
+                                <div class="component-desc">MongoDB for flexible schema tickets, logs, and configurations</div>
+                            </div>
+                            <div class="component">
+                                <div class="component-title">Relational DB</div>
+                                <div class="component-desc">PostgreSQL for core application data and transactional records</div>
+                            </div>
+                            <div class="component">
+                                <div class="component-title">Cache Layer</div>
+                                <div class="component-desc">Redis for session management, caching, and real-time data</div>
+                            </div>
+                            <div class="component">
+                                <div class="component-title">Message Queue</div>
+                                <div class="component-desc">Kafka for event streaming and RabbitMQ for task queuing</div>
+                            </div>
+                            <div class="component">
+                                <div class="component-title">Data Lake</div>
+                                <div class="component-desc">MinIO (S3-compatible) for long-term storage and analytics</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Event Flow View -->
+            <div id="flow" class="architecture-view">
+                <h2 style="margin-bottom: 30px; color: #2c3e50;">End-to-End Event Processing Flow</h2>
+                
+                <div class="flow-diagram">
+                    <div class="flow-step">
+                        <div class="flow-step-title">1️⃣ Event Ingestion</div>
+                        <div class="flow-step-desc">
+                            <strong>Source:</strong> NMS generates alert via SNMP trap, Syslog, REST API, or Webhook<br>
+                            <strong>Action:</strong> Event receiver validates, parses, and stores raw event in time-series database<br>
+                            <strong>Protocols Supported:</strong> SNMP v2c/v3, Syslog RFC 5424, HTTP/HTTPS, MQTT
+                        </div>
+                    </div>
+                    
+                    <div class="arrow">⬇️</div>
+                    
+                    <div class="flow-step">
+                        <div class="flow-step-title">2️⃣ Event Enrichment</div>
+                        <div class="flow-step-desc">
+                            <strong>CMDB Lookup:</strong> Fetch configuration item details, ownership, dependencies<br>
+                            <strong>Historical Context:</strong> Retrieve past incidents, known issues, resolution patterns<br>
+                            <strong>Service Mapping:</strong> Identify affected business services and their criticality<br>
+                            <strong>Impact Assessment:</strong> Calculate potential impact based on service dependencies
+                        </div>
+                    </div>
+                    
+                    <div class="arrow">⬇️</div>
+                    
+                    <div class="flow-step">
+                        <div class="flow-step-title">3️⃣ Event Correlation</div>
+                        <div class="flow-step-desc">
+                            <strong>Deduplication:</strong> Check for duplicate or similar events within time window<br>
+                            <strong>Pattern Recognition:</strong> Identify event patterns and sequences<br>
+                            <strong>Root Cause Analysis:</strong> Correlate symptoms to identify actual root cause<br>
+                            <strong>Grouping:</strong> Group related events into single incident
+                        </div>
+                    </div>
+                    
+                    <div class="arrow">⬇️</div>
+                    
+                    <div class="flow-step">
+                        <div class="flow-step-title">4️⃣ Decision Engine</div>
+                        <div class="flow-step-desc">
+                            <strong>Rule Evaluation:</strong> Apply business rules and policies<br>
+                            <strong>Priority Calculation:</strong> Determine priority based on impact, urgency, SLA<br>
+                            <strong>Action Selection:</strong> Decide: auto-remediate, create ticket, or escalate<br>
+                            <strong>Workflow Selection:</strong> Choose appropriate troubleshooting workflow
+                        </div>
+                    </div>
+                    
+                    <div class="arrow">⬇️</div>
+                    
+                    <div class="flow-step" style="background: linear-gradient(135deg, #f39c12 0%, #f1c40f 100%); color: white;">
+                        <div class="flow-step-title">5️⃣ Execution Paths (Parallel)</div>
+                        <div class="flow-step-desc">
+                            <strong>Path A - Ticket Creation:</strong> Auto-generate ticket with all context, assign to appropriate team<br>
+                            <strong>Path B - Auto Remediation:</strong> Execute diagnostic workflow, perform remediation actions<br>
+                            <strong>Path C - Notifications:</strong> Send alerts via email, SMS, Slack, PagerDuty<br>
+                            <strong>Path D - Escalation:</strong> Trigger escalation if thresholds met
+                        </div>
+                    </div>
+                    
+                    <div class="arrow">⬇️</div>
+                    
+                    <div class="flow-step">
+                        <div class="flow-step-title">6️⃣ Auto Remediation Workflow</div>
+                        <div class="flow-step-desc">
+                            <strong>Diagnostics:</strong> Run connectivity tests, check service status, analyze logs<br>
+                            <strong>Action Execution:</strong> Restart services, clear cache, reset connections<br>
+                            <strong>Verification:</strong> Confirm issue resolution through monitoring checks<br>
+                            <strong>Rollback:</strong> Automatic rollback if remediation fails
+                        </div>
+                    </div>
+                    
+                    <div class="arrow">⬇️</div>
+                    
+                    <div class="flow-step">
+                        <div class="flow-step-title">7️⃣ Verification & Closure</div>
+                        <div class="flow-step-desc">
+                            <strong>Health Check:</strong> Verify service is healthy and metrics are normal<br>
+                            <strong>Ticket Update:</strong> Update ticket with resolution details and actions taken<br>
+                            <strong>CMDB Update:</strong> Update configuration items if changes were made<br>
+                            <strong>Knowledge Base:</strong> Add successful resolution to knowledge base
+                        </div>
+                    </div>
+                    
+                    <div class="arrow">⬇️</div>
+                    
+                    <div class="flow-step" style="background: linear-gradient(135deg, #16a085 0%, #1abc9c 100%); color: white;">
+                        <div class="flow-step-title">8️⃣ Feedback & Learning</div>
+                        <div class="flow-step-desc">
+                            <strong>Metrics Tracking:</strong> Track MTTR, success rate, SLA compliance<br>
+                            <strong>ML Model Update:</strong> Feed outcomes to improve classification and prediction<br>
+                            <strong>Rule Refinement:</strong> Adjust correlation rules based on accuracy<br>
+                            <strong>Performance Optimization:</strong> Identify bottlenecks and optimization opportunities
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ITIL Processes View -->
+            <div id="itil" class="architecture-view">
+                <h2 style="margin-bottom: 30px; color: #2c3e50;">Complete ITIL Process Suite</h2>
+                
+                <div class="components">
+                    <div class="component">
+                        <div class="component-title">🎫 Incident Management</div>
+                        <div class="component-desc">Auto-ticket creation, intelligent routing, SLA tracking, escalation management, and resolution workflows with ML-based categorization.</div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">🔍 Problem Management</div>
+                        <div class="component-desc">Root cause analysis, known error database, problem workflow automation, and prevention strategies to reduce recurring incidents.</div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">🔄 Change Management</div>
+                        <div class="component-desc">CAB automation, impact assessment, risk analysis, deployment planning, and post-implementation review with automated approval workflows.</div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">📊 Service Level Management</div>
+                        <div class="component-desc">Multi-tier SLA configuration, real-time tracking, breach prediction, automated escalation, and comprehensive SLA reporting.</div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">🗂️ Configuration Management</div>
+                        <div class="component-desc">CMDB with auto-discovery, relationship mapping, CI lifecycle management, configuration audit, and drift detection.</div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">📦 Release & Deployment</div>
+                        <div class="component-desc">Release planning, CI/CD integration, blue-green/canary deployments, automated testing, and rollback management.</div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">📚 Knowledge Management</div>
+                        <div class="component-desc">Centralized knowledge base, AI-powered search, article effectiveness tracking, version control, and self-service integration.</div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">⚡ Availability Management</div>
+                        <div class="component-desc">Service uptime monitoring, MTBF/MTTR tracking, SPOF identification, resilience testing, and availability reporting.</div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">📈 Capacity Management</div>
+                        <div class="component-desc">Resource utilization tracking, ML-based forecasting, what-if scenarios, threshold management, and optimization recommendations.</div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">🛡️ Continuity Management</div>
+                        <div class="component-desc">BIA, RTO/RPO definition, DR planning, continuity testing, and incident response procedures.</div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">📋 Service Request Management</div>
+                        <div class="component-desc">Self-service catalog, automated fulfillment, approval workflows, entitlement management, and request analytics.</div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">📂 Service Portfolio</div>
+                        <div class="component-desc">Service catalog, pipeline management, lifecycle tracking, service costing, and value assessment.</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Diagnostics View -->
+            <div id="diagnostics" class="architecture-view">
+                <h2 style="margin-bottom: 30px; color: #2c3e50;">Level 1 & Level 2 Diagnostics</h2>
+                
+                <h3 style="margin: 30px 0 20px 0; color: #2c3e50;">Level 1 Diagnostics (Automated First Response)</h3>
+                <div class="components">
+                    <div class="component">
+                        <div class="component-title">🌐 Cisco ACI - L1</div>
+                        <div class="component-desc">
+                            <strong>Checks:</strong> Fabric health, APIC cluster status, endpoint connectivity, interface status, EPG deployment<br>
+                            <strong>Actions:</strong> Clear counters, bounce interface, verify contracts, endpoint cache clear
+                        </div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">🔀 SD-WAN - L1</div>
+                        <div class="component-desc">
+                            <strong>Checks:</strong> Control plane status, BFD sessions, tunnel status, transport health, SLA compliance<br>
+                            <strong>Actions:</strong> Reset tunnels, adjust BFD timers, verify policy push, check path preferences
+                        </div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">🖥️ Server - L1</div>
+                        <div class="component-desc">
+                            <strong>Checks:</strong> CPU/Memory usage, disk space, network connectivity, service status, system logs<br>
+                            <strong>Actions:</strong> Restart services, clear temp files, kill hung processes, flush DNS cache
+                        </div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">💾 SAN Switch - L1</div>
+                        <div class="component-desc">
+                            <strong>Checks:</strong> Fabric health, FC port status, zoning config, WWPN registration, buffer credits<br>
+                            <strong>Actions:</strong> Bounce ports, verify zones, check FLOGI database, reset statistics
+                        </div>
+                    </div>
+                </div>
+                
+                <h3 style="margin: 40px 0 20px 0; color: #2c3e50;">Level 2 Diagnostics (Advanced Root Cause Analysis)</h3>
+                <div class="components">
+                    <div class="component">
+                        <div class="component-title">🌐 Cisco ACI - L2</div>
+                        <div class="component-desc">
+                            <strong>Deep Dive:</strong> TCAM utilization, policy CAM analysis, MP-BGP EVPN status, endpoint tracker, COOP database<br>
+                            <strong>Advanced:</strong> Packet capture, ELAM capture, performance profiling, fault injection testing
+                        </div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">🔀 SD-WAN - L2</div>
+                        <div class="component-desc">
+                            <strong>Deep Dive:</strong> OMP route analysis, IPsec SA analysis, DPI insights, service chaining, certificate chain validation<br>
+                            <strong>Advanced:</strong> Control/data plane captures, debug sessions, flow analysis, baseline comparisons
+                        </div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">🖥️ Server - L2</div>
+                        <div class="component-desc">
+                            <strong>Deep Dive:</strong> Memory leak analysis, I/O wait analysis, system call tracing, deadlock detection, thread dumps<br>
+                            <strong>Advanced:</strong> Performance recording, core dump analysis, kernel trace, application profiling
+                        </div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">💾 SAN Switch - L2</div>
+                        <div class="component-desc">
+                            <strong>Deep Dive:</strong> Slow drain analysis, FCR analysis, NPIV troubleshooting, in-flight data integrity<br>
+                            <strong>Advanced:</strong> Port analyzer (SPAN), FC trace analysis, fabric topology mapping, congestion analysis
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Capacity Planning View -->
+            <div id="capacity" class="architecture-view">
+                <h2 style="margin-bottom: 30px; color: #2c3e50;">Comprehensive Capacity Planning</h2>
+                
+                <h3 style="margin: 30px 0 20px 0; color: #2c3e50;">Capacity Monitoring Domains</h3>
+                <div class="components">
+                    <div class="component">
+                        <div class="component-title">💻 Compute Capacity</div>
+                        <div class="component-desc">
+                            Physical servers (CPU/Memory/Storage), Virtual infrastructure (VMware/Hyper-V), Cloud instances (AWS/Azure/GCP), Containers & Kubernetes
+                        </div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">💾 Storage Capacity</div>
+                        <div class="component-desc">
+                            SAN arrays (all tiers), NAS/file storage, Object storage (S3/Blob), Database storage, Backup storage with dedup ratios
+                        </div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">🌐 Network Capacity</div>
+                        <div class="component-desc">
+                            LAN/DC network, WAN/SD-WAN circuits, ACI fabric resources (TCAM, policy CAM, endpoints), Load balancers, Firewalls
+                        </div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">🗄️ Database Capacity</div>
+                        <div class="component-desc">
+                            SQL databases, NoSQL databases, In-memory databases, Data warehouses, Cache systems (Redis/Memcached)
+                        </div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">📱 Application Capacity</div>
+                        <div class="component-desc">
+                            Application servers, Web servers, API gateways, Message queues, Microservices with connection pools
+                        </div>
+                    </div>
+                </div>
+                
+                <h3 style="margin: 40px 0 20px 0; color: #2c3e50;">Forecasting Models</h3>
+                <div class="components">
+                    <div class="component">
+                        <div class="component-title">📊 Statistical Models</div>
+                        <div class="component-desc">
+                            Linear regression, Moving averages, Exponential smoothing, ARIMA (seasonality), Prophet (Facebook's time-series)
+                        </div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">🤖 Machine Learning</div>
+                        <div class="component-desc">
+                            LSTM neural networks, Random forest regression, Gradient boosting (XGBoost/LightGBM), Pattern recognition
+                        </div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">🔮 Predictive Analytics</div>
+                        <div class="component-desc">
+                            Time-to-threshold predictions, Breach probability scoring, Anomaly detection, Seasonal adjustments, Confidence intervals
+                        </div>
+                    </div>
+                </div>
+                
+                <h3 style="margin: 40px 0 20px 0; color: #2c3e50;">Capacity Optimization</h3>
+                <div class="components">
+                    <div class="component">
+                        <div class="component-title">📏 Right-Sizing</div>
+                        <div class="component-desc">
+                            Oversized VMs/instances, Undersized resources, Optimal instance types, Storage tier optimization, Cost impact analysis
+                        </div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">💰 Cost Optimization</div>
+                        <div class="component-desc">
+                            Reserved instance opportunities, Spot instance candidates, Storage lifecycle policies, Unused resource cleanup, ROI calculations
+                        </div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">🚀 Performance Optimization</div>
+                        <div class="component-desc">
+                            Bottleneck identification, Load balancing improvements, Caching opportunities, Database query optimization, Index recommendations
+                        </div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">🔄 Consolidation</div>
+                        <div class="component-desc">
+                            Server consolidation, Storage consolidation, Network consolidation, Application consolidation, Data center consolidation
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Event Flow View -->
+            <div id="flow" class="architecture-view">
+                <h2 style="margin-bottom: 30px; color: #2c3e50;">End-to-End Event Processing Flow</h2>
+                
+                <div class="flow-diagram">
+                    <div class="flow-step">
+                        <div class="flow-step-title">1️⃣ Event Ingestion</div>
+                        <div class="flow-step-desc">
+                            <strong>Source:</strong> NMS generates alert via SNMP trap, Syslog, REST API, or Webhook<br>
+                            <strong>Action:</strong> Event receiver validates, parses, and stores raw event in time-series database<br>
+                            <strong>Protocols Supported:</strong> SNMP v2c/v3, Syslog RFC 5424, HTTP/HTTPS, MQTT
+                        </div>
+                    </div>
+                    
+                    <div class="arrow">⬇️</div>
+                    
+                    <div class="flow-step">
+                        <div class="flow-step-title">2️⃣ Event Enrichment</div>
+                        <div class="flow-step-desc">
+                            <strong>CMDB Lookup:</strong> Fetch configuration item details, ownership, dependencies<br>
+                            <strong>Historical Context:</strong> Retrieve past incidents, known issues, resolution patterns<br>
+                            <strong>Service Mapping:</strong> Identify affected business services and their criticality<br>
+                            <strong>Impact Assessment:</strong> Calculate potential impact based on service dependencies
+                        </div>
+                    </div>
+                    
+                    <div class="arrow">⬇️</div>
+                    
+                    <div class="flow-step">
+                        <div class="flow-step-title">3️⃣ Event Correlation</div>
+                        <div class="flow-step-desc">
+                            <strong>Deduplication:</strong> Check for duplicate or similar events within time window<br>
+                            <strong>Pattern Recognition:</strong> Identify event patterns and sequences<br>
+                            <strong>Root Cause Analysis:</strong> Correlate symptoms to identify actual root cause<br>
+                            <strong>Grouping:</strong> Group related events into single incident
+                        </div>
+                    </div>
+                    
+                    <div class="arrow">⬇️</div>
+                    
+                    <div class="flow-step">
+                        <div class="flow-step-title">4️⃣ Decision Engine</div>
+                        <div class="flow-step-desc">
+                            <strong>Rule Evaluation:</strong> Apply business rules and policies<br>
+                            <strong>Priority Calculation:</strong> Determine priority based on impact, urgency, SLA<br>
+                            <strong>Action Selection:</strong> Decide: auto-remediate, create ticket, or escalate<br>
+                            <strong>Workflow Selection:</strong> Choose appropriate troubleshooting workflow
+                        </div>
+                    </div>
+                    
+                    <div class="arrow">⬇️</div>
+                    
+                    <div class="flow-step" style="background: linear-gradient(135deg, #f39c12 0%, #f1c40f 100%); color: white;">
+                        <div class="flow-step-title">5️⃣ Execution Paths (Parallel)</div>
+                        <div class="flow-step-desc">
+                            <strong>Path A - Ticket Creation:</strong> Auto-generate ticket with all context, assign to appropriate team<br>
+                            <strong>Path B - Auto Remediation:</strong> Execute diagnostic workflow, perform remediation actions<br>
+                            <strong>Path C - Notifications:</strong> Send alerts via email, SMS, Slack, PagerDuty<br>
+                            <strong>Path D - Escalation:</strong> Trigger escalation if thresholds met
+                        </div>
+                    </div>
+                    
+                    <div class="arrow">⬇️</div>
+                    
+                    <div class="flow-step">
+                        <div class="flow-step-title">6️⃣ Auto Remediation Workflow</div>
+                        <div class="flow-step-desc">
+                            <strong>Diagnostics:</strong> Run connectivity tests, check service status, analyze logs<br>
+                            <strong>Action Execution:</strong> Restart services, clear cache, reset connections<br>
+                            <strong>Verification:</strong> Confirm issue resolution through monitoring checks<br>
+                            <strong>Rollback:</strong> Automatic rollback if remediation fails
+                        </div>
+                    </div>
+                    
+                    <div class="arrow">⬇️</div>
+                    
+                    <div class="flow-step">
+                        <div class="flow-step-title">7️⃣ Verification & Closure</div>
+                        <div class="flow-step-desc">
+                            <strong>Health Check:</strong> Verify service is healthy and metrics are normal<br>
+                            <strong>Ticket Update:</strong> Update ticket with resolution details and actions taken<br>
+                            <strong>CMDB Update:</strong> Update configuration items if changes were made<br>
+                            <strong>Knowledge Base:</strong> Add successful resolution to knowledge base
+                        </div>
+                    </div>
+                    
+                    <div class="arrow">⬇️</div>
+                    
+                    <div class="flow-step" style="background: linear-gradient(135deg, #16a085 0%, #1abc9c 100%); color: white;">
+                        <div class="flow-step-title">8️⃣ Feedback & Learning</div>
+                        <div class="flow-step-desc">
+                            <strong>Metrics Tracking:</strong> Track MTTR, success rate, SLA compliance<br>
+                            <strong>ML Model Update:</strong> Feed outcomes to improve classification and prediction<br>
+                            <strong>Rule Refinement:</strong> Adjust correlation rules based on accuracy<br>
+                            <strong>Performance Optimization:</strong> Identify bottlenecks and optimization opportunities
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Integrations View -->
+            <div id="integrations" class="architecture-view">
+                <h2 style="margin-bottom: 30px; color: #2c3e50;">Platform Integrations</h2>
+                
+                <h3 style="margin: 30px 0 20px 0; color: #2c3e50;">Network Management Systems (NMS)</h3>
+                <div class="integration-grid">
+                    <div class="integration-card">
+                        <div class="integration-icon">🔍</div>
+                        <div class="integration-name">SolarWinds</div>
+                        <div class="integration-type">SNMP, REST API</div>
+                    </div>
+                    <div class="integration-card">
+                        <div class="integration-icon">📊</div>
+                        <div class="integration-name">Nagios</div>
+                        <div class="integration-type">NRPE, REST API</div>
+                    </div>
+                    <div class="integration-card">
+                        <div class="integration-icon">📈</div>
+                        <div class="integration-name">Zabbix</div>
+                        <div class="integration-type">REST API, Webhooks</div>
+                    </div>
+                    <div class="integration-card">
+                        <div class="integration-icon">📡</div>
+                        <div class="integration-name">PRTG</div>
+                        <div class="integration-type">REST API, Notifications</div>
+                    </div>
+                    <div class="integration-card">
+                        <div class="integration-icon">🎯</div>
+                        <div class="integration-name">Prometheus</div>
+                        <div class="integration-type">HTTP, Alertmanager</div>
+                    </div>
+                    <div class="integration-card">
+                        <div class="integration-icon">🐕</div>
+                        <div class="integration-name">Datadog</div>
+                        <div class="integration-type">REST API, Webhooks</div>
+                    </div>
+                </div>
+                
+                <h3 style="margin: 40px 0 20px 0; color: #2c3e50;">ITSM Platforms</h3>
+                <div class="integration-grid">
+                    <div class="integration-card">
+                        <div class="integration-icon">❄️</div>
+                        <div class="integration-name">ServiceNow</div>
+                        <div class="integration-type">REST API, Import Sets</div>
+                    </div>
+                    <div class="integration-card">
+                        <div class="integration-icon">📋</div>
+                        <div class="integration-name">Jira Service Mgmt</div>
+                        <div class="integration-type">REST API v3, Webhooks</div>
+                    </div>
+                    <div class="integration-card">
+                        <div class="integration-icon">🔧</div>
+                        <div class="integration-name">BMC Remedy</div>
+                        <div class="integration-type">SOAP, REST API</div>
+                    </div>
+                    <div class="integration-card">
+                        <div class="integration-icon">🎫</div>
+                        <div class="integration-name">Zendesk</div>
+                        <div class="integration-type">REST API, Webhooks</div>
+                    </div>
+                    <div class="integration-card">
+                        <div class="integration-icon">📧</div>
+                        <div class="integration-name">Freshservice</div>
+                        <div class="integration-type">REST API, Email</div>
+                    </div>
+                </div>
+                
+                <h3 style="margin: 40px 0 20px 0; color: #2c3e50;">Communication & Collaboration</h3>
+                <div class="integration-grid">
+                    <div class="integration-card">
+                        <div class="integration-icon">💬</div>
+                        <div class="integration-name">Slack</div>
+                        <div class="integration-type">API, Webhooks, Bot</div>
+                    </div>
+                    <div class="integration-card">
+                        <div class="integration-icon">👥</div>
+                        <div class="integration-name">MS Teams</div>
+                        <div class="integration-type">Graph API, Connectors</div>
+                    </div>
+                    <div class="integration-card">
+                        <div class="integration-icon">📟</div>
+                        <div class="integration-name">PagerDuty</div>
+                        <div class="integration-type">Events API v2</div>
+                    </div>
+                    <div class="integration-card">
+                        <div class="integration-icon">📧</div>
+                        <div class="integration-name">Email (SMTP)</div>
+                        <div class="integration-type">SMTP, IMAP</div>
+                    </div>
+                    <div class="integration-card">
+                        <div class="integration-icon">📱</div>
+                        <div class="integration-name">SMS (Twilio)</div>
+                        <div class="integration-type">REST API</div>
+                    </div>
+                </div>
+                
+                <h3 style="margin: 40px 0 20px 0; color: #2c3e50;">Cloud & Infrastructure</h3>
+                <div class="integration-grid">
+                    <div class="integration-card">
+                        <div class="integration-icon">☁️</div>
+                        <div class="integration-name">AWS</div>
+                        <div class="integration-type">CloudWatch, API</div>
+                    </div>
+                    <div class="integration-card">
+                        <div class="integration-icon">🌐</div>
+                        <div class="integration-name">Azure</div>
+                        <div class="integration-type">Monitor, REST API</div>
+                    </div>
+                    <div class="integration-card">
+                        <div class="integration-icon">🔵</div>
+                        <div class="integration-name">GCP</div>
+                        <div class="integration-type">Operations, API</div>
+                    </div>
+                    <div class="integration-card">
+                        <div class="integration-icon">🔑</div>
+                        <div class="integration-name">Ansible</div>
+                        <div class="integration-type">Playbooks, API</div>
+                    </div>
+                    <div class="integration-card">
+                        <div class="integration-icon">🏗️</div>
+                        <div class="integration-name">Terraform</div>
+                        <div class="integration-type">CLI, Cloud API</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tech Stack View -->
+            <div id="tech-stack" class="architecture-view">
+                <h2 style="margin-bottom: 30px; color: #2c3e50;">Recommended Technology Stack</h2>
+                
+                <div class="tech-stack">
+                    <div class="tech-category">
+                        <div class="tech-category-title">Backend</div>
+                        <div class="tech-item">Python 3.11+ (FastAPI/Django)</div>
+                        <div class="tech-item">Node.js (TypeScript)</div>
+                        <div class="tech-item">Go (for high-performance services)</div>
+                    </div>
+                    
+                    <div class="tech-category">
+                        <div class="tech-category-title">Frontend</div>
+                        <div class="tech-item">React 18+ / Vue.js 3+</div>
+                        <div class="tech-item">Material-UI / Ant Design</div>
+                        <div class="tech-item">Redux Toolkit / Zustand</div>
+                        <div class="tech-item">WebSockets for real-time</div>
+                    </div>
+                    
+                    <div class="tech-category">
+                        <div class="tech-category-title">Databases</div>
+                        <div class="tech-item">PostgreSQL (relational)</div>
+                        <div class="tech-item">MongoDB (document)</div>
+                        <div class="tech-item">InfluxDB (time-series)</div>
+                        <div class="tech-item">Redis (cache & queue)</div>
+                    </div>
+                    
+                    <div class="tech-category">
+                        <div class="tech-category-title">Message Queue</div>
+                        <div class="tech-item">Apache Kafka</div>
+                        <div class="tech-item">RabbitMQ</div>
+                        <div class="tech-item">Redis Streams</div>
+                    </div>
+                    
+                    <div class="tech-category">
+                        <div class="tech-category-title">Workflow</div>
+                        <div class="tech-item">Apache Airflow</div>
+                        <div class="tech-item">Temporal.io</div>
+                        <div class="tech-item">Camunda (BPMN)</div>
+                    </div>
+                    
+                    <div class="tech-category">
+                        <div class="tech-category-title">Automation</div>
+                        <div class="tech-item">Ansible</div>
+                        <div class="tech-item">Terraform</div>
+                        <div class="tech-item">Python Scripts</div>
+                    </div>
+                    
+                    <div class="tech-category">
+                        <div class="tech-category-title">Container & Orchestration</div>
+                        <div class="tech-item">Docker</div>
+                        <div class="tech-item">Kubernetes</div>
+                        <div class="tech-item">Helm Charts</div>
+                    </div>
+                    
+                    <div class="tech-category">
+                        <div class="tech-category-title">Monitoring</div>
+                        <div class="tech-item">Prometheus + Grafana</div>
+                        <div class="tech-item">ELK Stack (Elasticsearch)</div>
+                        <div class="tech-item">Jaeger (tracing)</div>
+                    </div>
+                    
+                    <div class="tech-category">
+                        <div class="tech-category-title">AI/ML</div>
+                        <div class="tech-item">TensorFlow / PyTorch</div>
+                        <div class="tech-item">Scikit-learn</div>
+                        <div class="tech-item">spaCy (NLP)</div>
+                        <div class="tech-item">XGBoost</div>
+                    </div>
+                    
+                    <div class="tech-category">
+                        <div class="tech-category-title">API & Integration</div>
+                        <div class="tech-item">FastAPI / Express.js</div>
+                        <div class="tech-item">GraphQL (Strawberry)</div>
+                        <div class="tech-item">Kong / Tyk (API Gateway)</div>
+                    </div>
+                    
+                    <div class="tech-category">
+                        <div class="tech-category-title">Security</div>
+                        <div class="tech-item">OAuth 2.0 / SAML 2.0</div>
+                        <div class="tech-item">HashiCorp Vault</div>
+                        <div class="tech-item">Let's Encrypt (TLS)</div>
+                    </div>
+                    
+                    <div class="tech-category">
+                        <div class="tech-category-title">CI/CD</div>
+                        <div class="tech-item">GitLab CI / GitHub Actions</div>
+                        <div class="tech-item">ArgoCD</div>
+                        <div class="tech-item">Jenkins</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Metrics View -->
+            <div id="metrics" class="architecture-view">
+                <h2 style="margin-bottom: 30px; color: #2c3e50;">Target Success Metrics</h2>
+                
+                <h3 style="margin: 30px 0 20px 0; color: #2c3e50;">Technical Performance Targets</h3>
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-label">Platform Uptime</div>
+                        <div class="metric-value">99.9%</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">API Response Time (p95)</div>
+                        <div class="metric-value">&lt;500ms</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Event-to-Ticket Time</div>
+                        <div class="metric-value">&lt;10s</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Auto-Remediation Success</div>
+                        <div class="metric-value">&gt;90%</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">False Positive Rate</div>
+                        <div class="metric-value">&lt;1%</div>
+                    </div>
+                </div>
+                
+                <h3 style="margin: 40px 0 20px 0; color: #2c3e50;">Business Impact Targets</h3>
+                <div class="metrics-grid">
+                    <div class="metric-card" style="background: linear-gradient(135deg, #16a085 0%, #1abc9c 100%);">
+                        <div class="metric-label">Manual Ticket Reduction</div>
+                        <div class="metric-value">50%</div>
+                    </div>
+                    <div class="metric-card" style="background: linear-gradient(135deg, #16a085 0%, #1abc9c 100%);">
+                        <div class="metric-label">MTTR Reduction</div>
+                        <div class="metric-value">60%</div>
+                    </div>
+                    <div class="metric-card" style="background: linear-gradient(135deg, #16a085 0%, #1abc9c 100%);">
+                        <div class="metric-label">Operational Cost Savings</div>
+                        <div class="metric-value">40%</div>
+                    </div>
+                    <div class="metric-card" style="background: linear-gradient(135deg, #16a085 0%, #1abc9c 100%);">
+                        <div class="metric-label">SLA Compliance</div>
+                        <div class="metric-value">&gt;99%</div>
+                    </div>
+                    <div class="metric-card" style="background: linear-gradient(135deg, #16a085 0%, #1abc9c 100%);">
+                        <div class="metric-label">Customer Satisfaction</div>
+                        <div class="metric-value">&gt;95%</div>
+                    </div>
+                </div>
+                
+                <h3 style="margin: 40px 0 20px 0; color: #2c3e50;">Growth Metrics</h3>
+                <div class="metrics-grid">
+                    <div class="metric-card" style="background: linear-gradient(135deg, #e67e22 0%, #d35400 100%);">
+                        <div class="metric-label">Net Retention Rate</div>
+                        <div class="metric-value">&gt;80%</div>
+                    </div>
+                    <div class="metric-card" style="background: linear-gradient(135deg, #e67e22 0%, #d35400 100%);">
+                        <div class="metric-label">Monthly Customer Growth</div>
+                        <div class="metric-value">25%</div>
+                    </div>
+                    <div class="metric-card" style="background: linear-gradient(135deg, #e67e22 0%, #d35400 100%);">
+                        <div class="metric-label">Time to Value</div>
+                        <div class="metric-value">&lt;30 days</div>
+                    </div>
+                    <div class="metric-card" style="background: linear-gradient(135deg, #e67e22 0%, #d35400 100%);">
+                        <div class="metric-label">Platform Adoption Rate</div>
+                        <div class="metric-value">&gt;85%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"></div>
+                <span>Presentation Layer</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);"></div>
+                <span>API & Integration</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: linear-gradient(135deg, #e67e22 0%, #d35400 100%);"></div>
+                <span>Business Logic</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: linear-gradient(135deg, #16a085 0%, #1abc9c 100%);"></div>
+                <span>Integration Layer</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: linear-gradient(135deg, #8e44ad 0%, #9b59b6 100%);"></div>
+                <span>Data Layer</span>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function showView(viewId) {
+            // Hide all views
+            const views = document.querySelectorAll('.architecture-view');
+            views.forEach(view => view.classList.remove('active'));
+            
+            // Remove active from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Show selected view
+            document.getElementById(viewId).classList.add('active');
+            
+            // Mark tab as active
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>
