@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IT Service Automation Platform – Flowchart</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=IBM+Plex+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0d14;
+    --panel: #111522;
+    --border: #1e2740;
+    --accent1: #00d4ff;
+    --accent2: #7b2fff;
+    --accent3: #ff6b35;
+    --accent4: #00e676;
+    --accent5: #ffb300;
+    --text: #e0e6f0;
+    --muted: #5a6480;
+    --node-bg: #141926;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    font-family: 'IBM Plex Sans', sans-serif;
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Animated grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrapper {
+    position: relative;
+    z-index: 1;
+    padding: 40px 20px 60px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+
+  .header-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--accent1);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    display: block;
+  }
+
+  .header h1 {
+    font-size: clamp(24px, 4vw, 42px);
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    background: linear-gradient(135deg, #fff 40%, var(--accent1));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 12px;
+  }
+
+  .header p {
+    font-size: 15px;
+    color: var(--muted);
+    max-width: 560px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* ── FLOWCHART ── */
+  .flowchart {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  /* GROUP WRAPPER (for parallel paths) */
+  .parallel-group {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  /* NODE BASE */
+  .node {
+    position: relative;
+    background: var(--node-bg);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 22px 26px;
+    max-width: 560px;
+    width: 100%;
+    transition: transform 0.25s, box-shadow 0.25s;
+    cursor: default;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  .node:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+  }
+
+  /* Node accent bar */
+  .node::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px;
+    height: 100%;
+    border-radius: 12px 0 0 12px;
+    background: var(--node-color, var(--accent1));
+  }
+
+  .node-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .node-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    background: color-mix(in srgb, var(--node-color, var(--accent1)) 15%, transparent);
+    border: 1px solid color-mix(in srgb, var(--node-color, var(--accent1)) 30%, transparent);
+    flex-shrink: 0;
+  }
+
+  .node-step {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--node-color, var(--accent1));
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .node-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .node-body {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .node-item {
+    display: flex;
+    gap: 10px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--muted);
+  }
+
+  .node-item strong {
+    color: var(--text);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* Small node variant */
+  .node-sm {
+    max-width: 260px;
+    padding: 18px 20px;
+    flex: 1 1 220px;
+  }
+
+  .node-sm .node-title { font-size: 14px; }
+  .node-sm .node-item { font-size: 12px; }
+
+  /* Decision diamond */
+  .decision-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .decision {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    cursor: default;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  .decision-diamond {
+    position: absolute;
+    inset: 0;
+    background: var(--node-bg);
+    border: 1.5px solid var(--accent2);
+    transform: rotate(45deg);
+    border-radius: 8px;
+    box-shadow: 0 0 30px rgba(123,47,255,0.15);
+    transition: box-shadow 0.25s;
+  }
+
+  .decision:hover .decision-diamond {
+    box-shadow: 0 0 50px rgba(123,47,255,0.3);
+  }
+
+  .decision-inner {
+    position: relative;
+    z-index: 1;
+    padding: 10px;
+  }
+
+  .decision-icon { font-size: 24px; display: block; margin-bottom: 6px; }
+
+  .decision-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent2);
+    line-height: 1.3;
+  }
+
+  .decision-branches {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    width: 100%;
+    margin-top: 4px;
+  }
+
+  /* Connector arrows */
+  .connector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    padding: 6px 0;
+    animation: fadeUp 0.3s ease both;
+  }
+
+  .connector-line {
+    width: 2px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--accent1), transparent);
+    opacity: 0.5;
+  }
+
+  .connector-arrow {
+    width: 0;
+    height: 0;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-top: 10px solid var(--accent1);
+    opacity: 0.6;
+    margin-top: -1px;
+  }
+
+  .connector-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    margin: 4px 0 0;
+    text-transform: uppercase;
+  }
+
+  /* Horizontal connector between parallel group */
+  .h-connector {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: center;
+    padding: 0 20px;
+    gap: 0;
+    margin-bottom: 4px;
+  }
+
+  .h-line { flex: 1; height: 2px; background: rgba(0,212,255,0.2); }
+  .h-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent1); opacity: 0.5; }
+
+  /* COLOR CLASSES */
+  .c-cyan  { --node-color: #00d4ff; }
+  .c-blue  { --node-color: #4d8fff; }
+  .c-orange{ --node-color: #ff6b35; }
+  .c-green { --node-color: #00e676; }
+  .c-yellow{ --node-color: #ffb300; }
+  .c-purple{ --node-color: #c77dff; }
+  .c-teal  { --node-color: #00bfa5; }
+  .c-red   { --node-color: #ff4d6d; }
+
+  /* START / END terminal */
+  .terminal {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--node-bg);
+    border: 1.5px solid var(--border);
+    border-radius: 50px;
+    padding: 12px 28px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    animation: fadeUp 0.4s ease both;
+  }
+
+  .terminal.start { border-color: var(--accent4); color: var(--accent4); }
+  .terminal.end   { border-color: var(--accent1); color: var(--accent1); }
+  .terminal-dot { width: 10px; height: 10px; border-radius: 50%; background: currentColor; }
+
+  /* Tags inside nodes */
+  .tag {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: color-mix(in srgb, var(--node-color, var(--accent1)) 12%, transparent);
+    border: 1px solid color-mix(in srgb, var(--node-color, var(--accent1)) 25%, transparent);
+    color: var(--node-color, var(--accent1));
+    margin: 2px 2px 0 0;
+  }
+
+  .tags { margin-top: 10px; }
+
+  /* Outcome badge */
+  .outcome-badge {
+    position: absolute;
+    top: -10px;
+    right: 18px;
+    background: var(--node-color, var(--accent1));
+    color: #000;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+  }
+
+  /* Section label */
+  .section-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--muted);
+    text-transform: uppercase;
+    text-align: center;
+    margin: 10px 0 6px;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Stagger delays */
+  .node:nth-child(1), .terminal:nth-child(1) { animation-delay: 0.05s; }
+  .node:nth-child(2) { animation-delay: 0.1s; }
+  .node:nth-child(3) { animation-delay: 0.15s; }
+  .node:nth-child(4) { animation-delay: 0.2s; }
+
+  /* Legend */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 24px;
+    justify-content: center;
+    margin-top: 60px;
+    padding: 20px 28px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+  }
+
+  @media (max-width: 600px) {
+    .node-sm { max-width: 100%; }
+    .decision { width: 160px; height: 160px; }
+    .decision-label { font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <!-- HEADER -->
+  <div class="header">
+    <span class="header-tag">Architecture · Event Processing</span>
+    <h1>IT Service Automation Platform</h1>
+    <p>End-to-end flowchart covering ingestion, enrichment, decision routing, auto-remediation, and continuous learning.</p>
+  </div>
+
+  <!-- FLOWCHART -->
+  <div class="flowchart">
+
+    <!-- START -->
+    <div class="terminal start"><span class="terminal-dot"></span>START — NMS Alert Triggered</div>
+
+    <div class="connector"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+
+    <!-- STEP 1: INGESTION -->
+    <div class="node c-cyan" style="animation-delay:0.1s">
+      <div class="node-header">
+        <div class="node-icon" style="--node-color:#00d4ff">📡</div>
+        <div>
+          <span class="node-step">Step 01</span>
+          <div class="node-title">Event Ingestion</div>
+        </div>
+      </div>
+      <div class="node-body">
+        <div class="node-item"><strong>Source:</strong> SNMP Trap / Syslog / REST API / Webhook</div>
+        <div class="node-item"><strong>Action:</strong> Validate, parse &amp; store raw event in time-series DB</div>
+        <div class="node-item"><strong>Protocols:</strong> SNMP v2c/v3 · Syslog RFC 5424 · HTTP/HTTPS · MQTT</div>
+      </div>
+      <div class="tags">
+        <span class="tag">SolarWinds</span><span class="tag">Nagios</span><span class="tag">Zabbix</span>
+        <span class="tag">Prometheus</span><span class="tag">Datadog</span>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+
+    <!-- STEP 2: ENRICHMENT -->
+    <div class="node c-blue" style="animation-delay:0.15s">
+      <div class="node-header">
+        <div class="node-icon">🔍</div>
+        <div>
+          <span class="node-step">Step 02</span>
+          <div class="node-title">Event Enrichment</div>
+        </div>
+      </div>
+      <div class="node-body">
+        <div class="node-item"><strong>CMDB Lookup:</strong> CI details, ownership, dependencies</div>
+        <div class="node-item"><strong>History:</strong> Past incidents, known issues, resolution patterns</div>
+        <div class="node-item"><strong>Service Map:</strong> Affected business services &amp; criticality</div>
+        <div class="node-item"><strong>Impact:</strong> Calculate blast radius via dependency graph</div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+
+    <!-- STEP 3: CORRELATION -->
+    <div class="node c-purple" style="animation-delay:0.2s">
+      <div class="node-header">
+        <div class="node-icon">🔗</div>
+        <div>
+          <span class="node-step">Step 03</span>
+          <div class="node-title">Event Correlation &amp; Deduplication</div>
+        </div>
+      </div>
+      <div class="node-body">
+        <div class="node-item"><strong>Dedupe:</strong> Suppress duplicates within time window</div>
+        <div class="node-item"><strong>Pattern:</strong> Identify event sequences &amp; topology paths</div>
+        <div class="node-item"><strong>RCA:</strong> Correlate symptoms → root cause signal</div>
+        <div class="node-item"><strong>Group:</strong> Merge related events into single incident</div>
+      </div>
+      <div class="tags"><span class="tag">ML Model</span><span class="tag">Correlation Engine</span></div>
+    </div>
+
+    <div class="connector"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+
+    <!-- DECISION DIAMOND -->
+    <div class="decision-wrap">
+      <div class="decision">
+        <div class="decision-diamond"></div>
+        <div class="decision-inner">
+          <span class="decision-icon">⚖️</span>
+          <div class="decision-label">Decision<br>Engine</div>
+        </div>
+      </div>
+      <span class="section-label">Evaluate rules · priority · SLA · thresholds</span>
+
+      <!-- H-LINE spreader -->
+      <div class="h-connector" style="margin:8px 0 0">
+        <div class="h-line"></div><div class="h-dot"></div>
+        <div class="h-line"></div><div class="h-dot"></div>
+        <div class="h-line"></div><div class="h-dot"></div>
+        <div class="h-line"></div><div class="h-dot"></div>
+        <div class="h-line"></div>
+      </div>
+
+      <!-- PARALLEL EXECUTION PATHS -->
+      <div class="parallel-group" style="margin-top:12px">
+
+        <div class="node node-sm c-yellow" style="animation-delay:0.25s">
+          <span class="outcome-badge" style="--node-color:#ffb300">PATH A</span>
+          <div class="node-header">
+            <div class="node-icon">🎫</div>
+            <div><div class="node-title">Ticket Creation</div></div>
+          </div>
+          <div class="node-body">
+            <div class="node-item">Auto-generate ticket with full context</div>
+            <div class="node-item">Assign to appropriate team via rules</div>
+            <div class="node-item">Set priority &amp; SLA clock</div>
+          </div>
+          <div class="tags"><span class="tag">ServiceNow</span><span class="tag">Jira SM</span></div>
+        </div>
+
+        <div class="node node-sm c-green" style="animation-delay:0.3s">
+          <span class="outcome-badge" style="--node-color:#00e676">PATH B</span>
+          <div class="node-header">
+            <div class="node-icon">🤖</div>
+            <div><div class="node-title">Auto Remediation</div></div>
+          </div>
+          <div class="node-body">
+            <div class="node-item">Execute diagnostic workflow (L1/L2)</div>
+            <div class="node-item">Run remediation actions</div>
+            <div class="node-item">Verify fix &amp; rollback if needed</div>
+          </div>
+          <div class="tags"><span class="tag">Ansible</span><span class="tag">Python</span></div>
+        </div>
+
+        <div class="node node-sm c-orange" style="animation-delay:0.35s">
+          <span class="outcome-badge" style="--node-color:#ff6b35">PATH C</span>
+          <div class="node-header">
+            <div class="node-icon">📢</div>
+            <div><div class="node-title">Notifications</div></div>
+          </div>
+          <div class="node-body">
+            <div class="node-item">Alert via Email / SMS</div>
+            <div class="node-item">Slack &amp; MS Teams message</div>
+            <div class="node-item">PagerDuty on-call trigger</div>
+          </div>
+          <div class="tags"><span class="tag">Slack</span><span class="tag">PagerDuty</span></div>
+        </div>
+
+        <div class="node node-sm c-red" style="animation-delay:0.4s">
+          <span class="outcome-badge" style="--node-color:#ff4d6d">PATH D</span>
+          <div class="node-header">
+            <div class="node-icon">🚨</div>
+            <div><div class="node-title">Escalation</div></div>
+          </div>
+          <div class="node-body">
+            <div class="node-item">Breach SLA threshold?</div>
+            <div class="node-item">Escalate to L2/L3 team</div>
+            <div class="node-item">Management notification</div>
+          </div>
+          <div class="tags"><span class="tag">SLA Engine</span></div>
+        </div>
+
+      </div><!-- /parallel-group -->
+    </div><!-- /decision-wrap -->
+
+    <div class="connector" style="margin-top:8px"><div class="connector-line"></div><div class="connector-arrow"></div><div class="connector-label">Auto Remediation Path</div></div>
+
+    <!-- STEP 5: DIAGNOSTICS -->
+    <div class="node c-teal" style="animation-delay:0.45s; max-width:700px">
+      <div class="node-header">
+        <div class="node-icon">🧪</div>
+        <div>
+          <span class="node-step">Step 05</span>
+          <div class="node-title">Diagnostics — L1 &amp; L2</div>
+        </div>
+      </div>
+      <div class="node-body" style="grid-template-columns:1fr 1fr; gap:14px">
+        <div>
+          <div class="node-item" style="margin-bottom:4px"><strong>L1 (Auto):</strong></div>
+          <div class="node-item">Connectivity tests · Service status check</div>
+          <div class="node-item">Log analysis · Interface bounce</div>
+          <div class="node-item">Cache clear · DNS flush</div>
+        </div>
+        <div>
+          <div class="node-item" style="margin-bottom:4px"><strong>L2 (Deep):</strong></div>
+          <div class="node-item">Packet capture · ELAM / TCAM analysis</div>
+          <div class="node-item">Memory/thread dump · I/O trace</div>
+          <div class="node-item">Slow drain &amp; fabric topology analysis</div>
+        </div>
+      </div>
+      <div class="tags" style="margin-top:12px">
+        <span class="tag">Cisco ACI</span><span class="tag">SD-WAN</span>
+        <span class="tag">SAN Switch</span><span class="tag">Servers</span>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+
+    <!-- STEP 6: REMEDIATION -->
+    <div class="node c-green" style="animation-delay:0.5s">
+      <div class="node-header">
+        <div class="node-icon">🔧</div>
+        <div>
+          <span class="node-step">Step 06</span>
+          <div class="node-title">Remediation Execution</div>
+        </div>
+      </div>
+      <div class="node-body">
+        <div class="node-item"><strong>Actions:</strong> Restart services, clear cache, reset connections, bounce ports</div>
+        <div class="node-item"><strong>Rollback:</strong> Automatic rollback triggered on verification failure</div>
+        <div class="node-item"><strong>Safety Gate:</strong> Approval required for high-risk or production changes</div>
+      </div>
+      <div class="tags"><span class="tag">Ansible Playbook</span><span class="tag">Terraform</span><span class="tag">Python Script</span></div>
+    </div>
+
+    <div class="connector"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+
+    <!-- STEP 7: VERIFICATION -->
+    <div class="node c-blue" style="animation-delay:0.55s">
+      <div class="node-header">
+        <div class="node-icon">✅</div>
+        <div>
+          <span class="node-step">Step 07</span>
+          <div class="node-title">Verification &amp; Closure</div>
+        </div>
+      </div>
+      <div class="node-body">
+        <div class="node-item"><strong>Health Check:</strong> Service metrics return to baseline</div>
+        <div class="node-item"><strong>Ticket Update:</strong> Resolution summary &amp; actions logged</div>
+        <div class="node-item"><strong>CMDB Update:</strong> Config items updated post-change</div>
+        <div class="node-item"><strong>Knowledge Base:</strong> Successful resolution added as article</div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+
+    <!-- STEP 8: FEEDBACK LOOP -->
+    <div class="node c-orange" style="animation-delay:0.6s">
+      <div class="node-header">
+        <div class="node-icon">🔁</div>
+        <div>
+          <span class="node-step">Step 08</span>
+          <div class="node-title">Feedback &amp; Continuous Learning</div>
+        </div>
+      </div>
+      <div class="node-body" style="grid-template-columns:1fr 1fr; gap:14px">
+        <div>
+          <div class="node-item"><strong>Metrics:</strong> MTTR · SLA compliance · Success rate</div>
+          <div class="node-item"><strong>ML Update:</strong> Train models on resolution outcomes</div>
+        </div>
+        <div>
+          <div class="node-item"><strong>Rules:</strong> Refine correlation accuracy</div>
+          <div class="node-item"><strong>Capacity:</strong> Feed forecasting models</div>
+        </div>
+      </div>
+      <div class="tags">
+        <span class="tag">InfluxDB</span><span class="tag">TensorFlow</span>
+        <span class="tag">XGBoost</span><span class="tag">Grafana</span>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+
+    <!-- END -->
+    <div class="terminal end"><span class="terminal-dot"></span>END — Incident Resolved &amp; Learned</div>
+
+    <!-- LEGEND -->
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#00d4ff"></div>Ingestion</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#4d8fff"></div>Enrichment / Closure</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#c77dff"></div>Correlation</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#7b2fff"></div>Decision</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#ffb300"></div>Ticket Path</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#00e676"></div>Remediation</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#ff6b35"></div>Notification / Feedback</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#ff4d6d"></div>Escalation</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#00bfa5"></div>Diagnostics</div>
+    </div>
+
+  </div><!-- /flowchart -->
+</div><!-- /wrapper -->
+</body>
+</html>
