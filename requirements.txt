@@ -16,7 +16,7 @@ passlib[bcrypt]==1.7.4
 # Validation & Utils
 pydantic>=2.0
 pydantic-settings>=2.0
-python-multipart==0.0.6
+python-multipart==0.0.26
 
 # Optional: Redis for cache/queue
 redis==5.0.1
